@@ -52,9 +52,38 @@ for i in range(100):
     plt.title("Mass vs Radius")
     plt.xlabel("Radius (Km)")
     plt.ylabel("Mass (solar masses)")
+    # plt.show()
 plt.plot(radius_range, upper_mass_limit(radius_range)/(2*10**33), label="Buchdahl's limit")  # this is the criteria set my Buchdahl's theorem
 plt.legend()
 plt.show()
+
+
+"""Plotting only single stable branch by checking first derivative"""
+for i in range(100):
+    csv_file1 = f"{base_path}{i:06d}.csv"
+    # Read the CSV file using pandas
+    df = pd.read_csv(csv_file1)
+    # Extract data from two columns and convert to a NumPy array
+    mass = df['M'].to_numpy()
+    radius = df['R'].to_numpy()
+
+    gradient = np.gradient(mass[-65:])
+
+    # Get the sign of each element
+    signs = np.sign(gradient)
+
+    # Count the number of sign changes
+    num_sign_changes = np.sum(signs[:-1] != signs[1:])
+    if num_sign_changes == 1:
+        plt.plot(radius[-65:], mass[-65:])
+    plt.xlim(0, 20)
+    plt.ylim(0, 3)
+    plt.title("Mass vs Radius for single stable branch")
+    plt.xlabel("Radius (Km)")
+    plt.ylabel("Mass (solar masses)")
+plt.show()
+
+
 
 def f(d, x,y,z):
     """
