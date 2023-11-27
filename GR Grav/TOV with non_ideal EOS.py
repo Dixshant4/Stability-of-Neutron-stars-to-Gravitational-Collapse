@@ -4,6 +4,21 @@ import numpy as np
 import pandas as pd
 c2 = 9*10**20
 csv_file0 = '/Users/dixshant/Documents/OLD MAC/UofT/4th year/PHY478/TOV/EMN450_N2LO_MBPT3_beta_equilibrium_eft_bands_00d75_004d000_maxpc2-8e11_qrkagn_05d000_00d010/DRAWmod1000-000000/eos-draw-000051.csv'
+base_path = '/Users/dixshant/Documents/OLD MAC/UofT/4th year/PHY478/TOV/EMN450_N2LO_MBPT3_beta_equilibrium_eft_bands_00d75_004d000_maxpc2-8e11_qrkagn_05d000_00d010/DRAWmod1000-000000/eos-draw-'
+# for i in range(100):
+#     csv_file1 = f"{base_path}{i:06d}.csv"
+#     # Read the CSV file using pandas
+#     df = pd.read_csv(csv_file1)
+#
+#     # Extract data from two columns and convert to a NumPy array
+#     rho = df['energy_densityc2'].to_numpy()
+#     pressure = df['pressurec2'].to_numpy()
+#     plt.plot(pressure, rho)
+#     # plt.xlim(0, 50)
+#     plt.title("pressure vs rho")
+#     plt.xlabel("pressur ")
+#     plt.ylabel("rho ")
+# plt.show()
 
 # Read the CSV file using pandas
 df = pd.read_csv(csv_file0)
@@ -14,25 +29,35 @@ pressure = df['pressurec2'].to_numpy()
 pressure = pressure*c2
 
 pressure = np.array([float(item) for item in pressure])
+base_path = "/Users/dixshant/Documents/OLD MAC/UofT/4th year/PHY478/TOV/EMN450_N2LO_MBPT3_beta_equilibrium_eft_bands_00d75_004d000_maxpc2-8e11_qrkagn_05d000_00d010/DRAWmod1000-000000/macro-draw-"
 
+"""Buchdahl's Theorem"""
+def upper_mass_limit(R):
+    G = 6.7e-8
+    c2 = 9 * 10 ** 20
+    return 4*R*100000*c2/(9*G)
 
-csv_file1 = '/Users/dixshant/Documents/OLD MAC/UofT/4th year/PHY478/TOV/EMN450_N2LO_MBPT3_beta_equilibrium_eft_bands_00d75_004d000_maxpc2-8e11_qrkagn_05d000_00d010/DRAWmod1000-000000/macro-draw-000051.csv'
+radius_range = np.arange(0, 50.5, 0.5)
 
-# Read the CSV file using pandas
-df = pd.read_csv(csv_file1)
-
-# Extract data from two columns and convert to a NumPy array
-mass = df['M'].to_numpy()
-radius = df['R'].to_numpy()
-# plt.scatter(radius, mass)
-# plt.title("Mass vs Radius")
-# plt.xlabel("Radius (Km)")
-# plt.ylabel("Mass (solar masses)")
-# plt.show()
+for i in range(100):
+    csv_file1 = f"{base_path}{i:06d}.csv"
+    # Read the CSV file using pandas
+    df = pd.read_csv(csv_file1)
+    # Extract data from two columns and convert to a NumPy array
+    mass = df['M'].to_numpy()
+    radius = df['R'].to_numpy()
+    plt.plot(radius, mass)
+    plt.xlim(0, 50)
+    plt.ylim(0, 3)
+    plt.title("Mass vs Radius")
+    plt.xlabel("Radius (Km)")
+    plt.ylabel("Mass (solar masses)")
+plt.plot(radius_range, upper_mass_limit(radius_range)/(2*10**33), label="Buchdahl's limit")  # this is the criteria set my Buchdahl's theorem
+plt.legend()
+plt.show()
 
 def f(d, x,y,z):
     """
-
     :param c: constant
     :param x: Radius r
     :param y: Mass
@@ -43,7 +68,6 @@ def f(d, x,y,z):
 
 def g(G,c2,d,x,y,z,p):
     """
-
     :param G: Gravitational constant
     :param c2: light speed squared
     :param d: 4*pi
@@ -116,6 +140,7 @@ for i in range(len(pressure)):
         Radius.append(x_values[sign_change]/100000)
         Mass.append(y_values[sign_change]/(2*10**33))
     else:
+        plt.plot(np.array(Radius), upper_mass_limit(np.array(Radius)) / (2 * 10 ** 30))
         plt.plot(Radius, Mass)
         plt.title("Mass vs Radius")
         plt.xlabel("Radius (Km)")
@@ -123,7 +148,7 @@ for i in range(len(pressure)):
         plt.show()
         break
 
-#
+
 # Y = np.array(y_values)
 # X = np.array(x_values)/100000
 #
@@ -147,7 +172,5 @@ for i in range(len(pressure)):
 # plt.ylabel("pressure (g/cm^3)*c2")
 #
 # plt.tight_layout()
-# 
+#
 # plt.show()
-#
-#
